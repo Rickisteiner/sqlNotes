@@ -1,0 +1,122 @@
+Databases: persisting data.
+
+1. A database stores information so that even if our server is restarted - the data is saved. (think about the history for the chat app.)
+
+2. We can acess this data from anywhere. 
+
+3. Structured Query Language
+
+4. sqlite saves data to a file called .db (sqlite3 dwarfs.db)
+
+5. This works with tables. Where you can use the REST methods or CRUD.
+
+6. CREATE TABLE dwarfs (ID INTEGER PRIMARY KEY, name TEXT, color TEXT);
+   Will create a table with 3 columns.
+   ID INTEGER PRINARY KEY - this is a way of sort of tracking our data. Like how we set and ID to each pet. This will be a number. The PRIMARY KEY tells the database that every time an entry comes in you just assign that piece of data the next number available (like the counter we used). You will more likely be looking for information through like name or color though. ID is automatically done. You will never be inserting into there.
+
+7. .schema dwarfs - you just get all the information you just typed in. This is good when you forget what the columns are or what you called them, the order.
+
+8. The capitilization is good practice.
+
+9. INSERT INTO dwarfs (name, color) VALUES ("Happy", "Yellow");
+   Inserting into the specified file
+   Then we specify what columns we are inserting to.
+   Then we give it the values. The name is happy, yellow is the color.
+
+10. How do we make sure this worked? SELECT * FROM dwarfs; 
+    * gives us everything.
+    You see this - 1|Happy|Yellow
+
+11. What if you only want to see one and not all? SELECT * FROM dwarfs WHERE id=3;
+    You still want the * so you see all the data from that one.   
+    SELECT * FROM dwarfs WHERE color="Yellow"; - to see all the dwarfs with a hat that color. You can view from any column.
+
+12. Updating - 
+    UPDATE dwarfs SET name="Sniffly", color = "Green" WHERE id=7;
+
+    What if we wanted to change multiples at once? Where all the colors are yellow, change them to gray. Leave out the id!
+      So - UPDATE dwarfs SET color = "Gray" WHERE color="Yellow";
+      This means set the color to gray where it equals yellow.
+13. When you are changing a specific thing on one item it is probably easier to us this method: 
+    UPDATE dwarfs SET color = "Green" WHERE id=7;
+
+14. DELETE FROM dwarfs WHERE id=4; 
+    You can also delete more than one at once.
+
+15. When you delete - the numbers do not change. 4 was assigned and now you will never have a 4 again.
+
+16. You can't delete a column so - 
+    BEGIN TRANSACTION;
+    CREATE TEMPORARY TABLE t1_backup(a,b);
+    INSERT INTO t1_backup SELECT a,b FROM t1;
+    DROP TABLE t1;
+    CREATE TABLE t1(a,b);
+    INSERT INTO t1 SELECT a,b FROM t1_backup;
+    DROP TABLE t1_backup;
+    COMMIT;
+
+17. To add a column with a timestamp you have to create a new table. You can have multiple tables in a database. So you create a new table with the new column - CREATE TABLE dwarves (ID INTEGER PRIMARY KEY, name TEXT, color TEXT, time DEFAULT CURRENT_TIMESTAMP NOT NULL);
+  Then re-insert each item.
+
+18. You can delete the table with DROP TABLE. (which will get rid of the old dwarfs table.)
+    DROP TABLE Dwarfs. 
+
+19. DROP Table dwarfs;
+    CREATE TABLE dwarfs (id INTEGER PRIMARY KEY, name TEXT, color TEXT, time DATETIME CURRENT_TIMESTAMP);
+
+20. CREATE TRIGGER dwarfs BEFORE UPDATE ON dwarves BEGIN //the first is the database the second is the table name.
+    UPDATE dwarfs SET updated_at = CURRENT_TIMESTAMP WHERE id = new.id;
+    end;
+
+    Trigger is basically an event listener that happens when we edit a row in dwarves. In this example, there's an updated_at column.
+
+    Then you need INSERT INTO for each dwarf again.
+
+21. We could also be writing this all in an sql file. and then you < it in. SO sqlite3 dwarfs.db < seeds.sql and go in. This is helpful for updates. To just go into a file, type it all out, and sort of shovel it in.
+    So you would remove your old .db rm file.db
+    sqlite3 dwarfs.db < file.sql
+    Go into sqlite3
+  This is super helpful for when you need to delete a column ect. 
+
+This is what is in the sql file: 
+
+CREATE TABLE pets (
+id INTEGER PRIMARY KEY,
+name TEXT, type TEXT,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+CREATE TRIGGER pets BEFORE UPDATE ON pets BEGIN
+    UPDATE dwarfs SET updated_at = CURRENT_TIMESTAMP WHERE id = new.id;
+END;
+
+INSERT INTO 'pets' (name,type) VALUES ("Alvin", "Dog");
+
+- Don't forget you need this line in your ruby - db = SQLite3::Database.new "pets.db"
+
+22. db.execute("") is a method we use to use our database in Ruby.
+
+23. When grabbing info, it's in an array. For example in the ruby exercise you are not putsing the phone and number. You are putsing person[0][0] and person[0][1]
+
+24. In order to get the user input AKA a number that a user put in you need to set params to the method. Example -
+  db.execute("UPDATE friends SET phone=? WHERE id=?",number,id); #the ? is adding a param
+  person = db.execute("SELECT name,phone FROM friends WHERE id=?",id);
+  puts "#{person[0][0]}'s phone number is now #{person[0][1]}"
+    -This is allowing us to select someone by their ID and update their information. Basically allows us to use a variable.
+
+25. To see the makeup of your table - PRAGMA table_info(table_name)
+    For example, the schools table - 
+    0|ID|INTEGER|0||1
+    1|name|TEXT|0||0
+    2|city|TEXT|0||0
+    3|state|TEXT|0||0
+    4|zip|INTEGER|0||0
+
+26. For updating many at once - 
+    SELECT age from TEACHERS;
+    UPDATE teachers SET age="40";
+
+27. DELETE FROM table_name will delete all the information from the table. To actually delete the table you need to use DROP TABLE.
+
+
+

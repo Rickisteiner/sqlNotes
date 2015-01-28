@@ -1,0 +1,23 @@
+1|Mizrachi|Cleveland|Ohio|44118
+2|CSU|Cleveland|Ohio|44118
+3|HAC|Cleveland|Ohio|44118
+
+0|ID|INTEGER|0||1
+1|name|TEXT|0||0
+2|city|TEXT|0||0
+3|state|TEXT|0||0
+4|zip|INTEGER|0||0
+
+1|Ricki|Ricki@school.com|Math|23
+2|Katrina|Katrina@school.com|Math|25
+3|Shosh|Shosh@school.com|Hebrew|27
+4|Alvin|Alvin@school.com|Hood|29
+5|Gabriel|Gabriel@school.com|English|31
+6|James|James@school.com|Science|33
+
+CREATE TABLE schools (ID INTEGER PRIMARY KEY, name TEXT, city TEXT, state TEXT, zip INTEGER);
+
+SELECT age from TEACHERS;
+UPDATE teachers SET age="40";
+
+DELETE FROM teachers;
