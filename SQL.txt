@@ -118,5 +118,27 @@ INSERT INTO 'pets' (name,type) VALUES ("Alvin", "Dog");
 
 27. DELETE FROM table_name will delete all the information from the table. To actually delete the table you need to use DROP TABLE.
 
+What about if we have two tables and want to see the information matched up? For example, a table of people's names and a table of cities names?
+
+28. FROM persons CROSS JOIN cities;
+  This will list everything together but they didn't actually join. This is great so you can see everything together.
+
+29. INNER JOIN - only give me information that matches this.
+    SELECT persons.name, cities.name FROM persons INNER JOIN cities ON persons.city_id=cities.id;
+    we only want to see name from persons and name from cities.
+    But we also want to join those name and cities up so we do that by id.
+    In this case the id's have also been referanced.
+
+    Basically this is just another way to view your data. In a way that might be more helpful.
+
+    If a person doesn't have a city_id they will not appear.
+
+30. OUTER JOIN - give me everyone even if they don't have all the information.
+    
+    SELECT persons.name, cities.name FROM persons LEFT OUTER JOIN cities ON persons.city_id=cities.id;
+
+    This will give us everyone, also people without city ids.
+
+    Left because the persons table is to the left.
 
 
