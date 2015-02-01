@@ -70,8 +70,6 @@ Databases: persisting data.
 
     Trigger is basically an event listener that happens when we edit a row in dwarves. In this example, there's an updated_at column.
 
-    Trigger keeps track of our updates.
-
     Then you need INSERT INTO for each dwarf again.
 
 21. We could also be writing this all in an sql file. and then you < it in. SO sqlite3 dwarfs.db < seeds.sql and go in. This is helpful for updates. To just go into a file, type it all out, and sort of shovel it in.
@@ -120,14 +118,43 @@ INSERT INTO 'pets' (name,type) VALUES ("Alvin", "Dog");
 
 27. DELETE FROM table_name will delete all the information from the table. To actually delete the table you need to use DROP TABLE.
 
-28. The thing to remember is that we are now dealing with arrays. Which are much easier to grab data from. Basically you just need to figure out the index. For example we have a table with an id, name, and color. So if its called pets. 
+28. For updating many at once - 
+    SELECT age from TEACHERS;
+    UPDATE teachers SET age="40";
+
+29. DELETE FROM table_name will delete all the information from the table. To actually delete the table you need to use DROP TABLE.
+
+30. The thing to remember is that we are now dealing with arrays. Which are much easier to grab data from. Basically you just need to figure out the index. For example we have a table with an id, name, and color. So if its called pets. 
     To get the first name? pets[0][1].
 
-29. What about when I want to use user input? AKA params.
+31. What about when I want to use user input? AKA params.
     newpet = [params["name"],params["type"]]
     db.execute("INSERT INTO pets (name,type) VALUES (?,?)",(newpet));
       This is the safer way to do it so that we lock users in and they can't put something in our form like DROP TABLE and have the computer read it as a SQL command instead of param.
       Another example -
         db.execute("SELECT * FROM pets WHERE id=(?)", params[:id].to_i)
 
-30. Users are never using ids however, they are needed so the computer can understand what a user is trying to do with the data. In the pets example, users are writing in names, but computers are not getting the name they are getting a number. Like IP adresses and URLs. 
+32. Users are never using ids however, they are needed so the computer can understand what a user is trying to do with the data. In the pets example, users are writing in names, but computers are not getting the name they are getting a number. Like IP adresses and URLs. 
+
+What about if we have two tables and want to see the information matched up? For example, a table of people's names and a table of cities names?
+
+33. FROM persons CROSS JOIN cities;
+  This will list everything together but they didn't actually join. This is great so you can see everything together.
+
+34. INNER JOIN - only give me information that matches this.
+    SELECT persons.name, cities.name FROM persons INNER JOIN cities ON persons.city_id=cities.id;
+    we only want to see name from persons and name from cities.
+    But we also want to join those name and cities up so we do that by id.
+    In this case the id's have also been referanced.
+
+    Basically this is just another way to view your data. In a way that might be more helpful.
+
+    If a person doesn't have a city_id they will not appear.
+
+35. OUTER JOIN - give me everyone even if they don't have all the information.
+    
+    SELECT persons.name, cities.name FROM persons LEFT OUTER JOIN cities ON persons.city_id=cities.id;
+
+    This will give us everyone, also people without city ids.
+
+    Left because the persons table is to the left.
